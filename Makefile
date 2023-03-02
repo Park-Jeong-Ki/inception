@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: wonkim <wonkim@student.42.fr>              +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/02/14 14:47:31 by wonkim            #+#    #+#              #
-#    Updated: 2023/02/14 14:47:51 by wonkim           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 HOSTS_SETUP_SH=./srcs/requirements/tools/hosts.sh
 VOLUME_SETUP_SH=./srcs/requirements/tools/volume.sh
 FCLEAN_SETUP_SH=./srcs/requirements/tools/fclean.sh
