@@ -1,29 +1,23 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Dockerfile                                         :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: wonkim <wonkim@student.42.fr>              +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/02/14 14:50:16 by wonkim            #+#    #+#              #
-#    Updated: 2023/02/14 14:50:17 by wonkim           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+FROM alpine:3.16
+# socket 위치 /run/mysqld/mysqld.sock
+RUN mkdir -p /run/mysqld
+# mariadb volumes mount위치
+RUN mkdir -p /var/lib/mysql
 
-FROM debian:buster
+RUN apk add mariadb \ 
+            mariadb-common \
+            mariadb-client \
+            mariadb-server-utils
+RUN apk add openrc
+RUN apk update && apk upgrade
+
+COPY ./conf/my.cnf /etc/my.cnf
+
+RUN chown -R mysql:mysql /var/lib/mysql
+RUN chmod 777 /var/lib/mysql
+
+COPY ./tools/entry.sh /tmp/run_mariadb.sh
+RUN chmod +x /tmp/run_mariadb.sh
+ENTRYPOINT ["sh", "/tmp/run_mariadb.sh"]
 
 EXPOSE 3306
-
-COPY ./tools/setup.sh /setup.sh
-
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y mariadb-server mariadb-client && \
-    mkdir -p /var/run/mysqld && \
-    chown -R mysql:mysql /var/run/mysqld && \
-    chmod +x setup.sh && \
-    rm -f /etc/mysql/mariadb.conf.d/50-server.cnf
-
-COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
-
-ENTRYPOINT ["sh", "/setup.sh"]

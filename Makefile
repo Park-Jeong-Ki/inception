@@ -1,45 +1,32 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: wonkim <wonkim@student.42.fr>              +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2023/02/14 14:47:31 by wonkim            #+#    #+#              #
-#    Updated: 2023/02/14 14:47:51 by wonkim           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
+VOLUME_DIR	:=	/home/yotak/data
+DOCKER_COMPOSE	:=	docker compose
+DOCKER_COMPOSE_FILE	:=	./srcs/docker-compose.yml
+PROJECT_NAME	:=	Inception
+NETWORK_NAME := network-inception
 
-HOSTS_SETUP_SH=./srcs/requirements/tools/hosts.sh
-VOLUME_SETUP_SH=./srcs/requirements/tools/volume.sh
-FCLEAN_SETUP_SH=./srcs/requirements/tools/fclean.sh
+.PHONY:	all
+all:
+	@mkdir -p $(VOLUME_DIR)/db
+	@mkdir -p $(VOLUME_DIR)/wordpress
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up --build
 
-DOCKER_COMPOSE_FILE = ./srcs/docker-compose.yml
-DOCKER_COMPOSE = docker compose --file $(DOCKER_COMPOSE_FILE)
-
-all: up
-
+.PHONY:	up
 up:
-	@$(VOLUME_SETUP_SH)
-	@$(HOSTS_SETUP_SH)
-	$(DOCKER_COMPOSE) up -d --build
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up
 
+.PHONY:	down
 down:
-	$(DOCKER_COMPOSE) down --volumes
+	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
 
-clean:
-	sudo docker-compose -f srcs/docker-compose.yml down -v --rmi all --remove-orphans
-	$(DOCKER_COMPOSE) down --rmi all --volumes
+.PHONY: clean
+clean: down
+	docker system prune -f --all # Remove all unused images not just dangling ones
 
+.PHONY: fclean
 fclean: clean
-	sudo rm -rf ${HOME}/data
-	sudo docker system prune --volumes --all --force
-	sudo docker network prune --force
-	sudo docker volume prune --force
-	@$(FCLEAN_SETUP_SH)
+	@rm -rf $(VOLUME_DIR)/db/*
+	@rm -rf $(VOLUME_DIR)/wordpress/*
+	@docker volume rm $$(docker volume ls -q)
 
-re:
-	@make fclean
-	@make all
-
-.PHONY: all up down clean fclean re
+.PHONY: re
+re: fclean all
