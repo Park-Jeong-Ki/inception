@@ -1,9 +1,21 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: wonkim <wonkim@student.42.fr>              +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2023/02/14 14:47:31 by wonkim            #+#    #+#              #
+#    Updated: 2023/02/14 14:47:51 by wonkim           ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 HOSTS_SETUP_SH=./srcs/requirements/tools/hosts.sh
 VOLUME_SETUP_SH=./srcs/requirements/tools/volume.sh
 FCLEAN_SETUP_SH=./srcs/requirements/tools/fclean.sh
 
 DOCKER_COMPOSE_FILE = ./srcs/docker-compose.yml
-DOCKER_COMPOSE = docker-compose --file $(DOCKER_COMPOSE_FILE)
+DOCKER_COMPOSE = docker compose --file $(DOCKER_COMPOSE_FILE)
 
 all: up
 
