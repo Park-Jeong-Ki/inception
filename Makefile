@@ -1,32 +1,17 @@
-VOLUME_DIR	:=	/home/yotak/data
-DOCKER_COMPOSE	:=	docker compose
-DOCKER_COMPOSE_FILE	:=	./srcs/docker-compose.yml
-PROJECT_NAME	:=	Inception
-NETWORK_NAME := network-inception
-
-.PHONY:	all
 all:
-	@mkdir -p $(VOLUME_DIR)/db
-	@mkdir -p $(VOLUME_DIR)/wordpress
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up --build
+	@docker compose -f ./scrs/docker-compose.yml up -d --build
 
-.PHONY:	up
-up:
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) up
-
-.PHONY:	down
 down:
-	$(DOCKER_COMPOSE) -f $(DOCKER_COMPOSE_FILE) down
+	@docker compose -f ./scrs/docker-compose.yml down
 
-.PHONY: clean
-clean: down
-	docker system prune -f --all # Remove all unused images not just dangling ones
+re:
+	@docker compose -f scrs/docker-compose.yml up -d --build
 
-.PHONY: fclean
-fclean: clean
-	@rm -rf $(VOLUME_DIR)/db/*
-	@rm -rf $(VOLUME_DIR)/wordpress/*
-	@docker volume rm $$(docker volume ls -q)
+clean:
+	@docker stop $$(docker ps -qa);\
+	docker rm $$(docker ps -qa);\
+	docker rmi -f $$(docker images -qa);\
+	docker volume rm $$(docker volume ls -q);\
+	docker network rm $$(docker network ls -q);\
 
-.PHONY: re
-re: fclean all
+.PHONY: all re down clean
