@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # * 이 sh 파일은 하나의 프로그램처럼, 두번째 인자에 넣은 환경변수를 echo로 출력한다.
-# * EX) sh ./info.sh intra_id  입력 시, echo minkyei가 실행된다. 
+# * EX) sh ./info.sh intra_id  입력 시, echo intra_id 실행된다. 
 # List -----
 # intra_id : intra id
 # wordpress_path : wordpress path for volume
